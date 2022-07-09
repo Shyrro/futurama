@@ -1,45 +1,39 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "uno.css";
+import "./App.css";
+import Character from "./Components/Character";
+import { FavoritesContext } from "./RouterApp";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { addFavorite } = useContext(FavoritesContext);
+  const [characters, setCharacters] = useState<Character[]>([]);
+
+  useEffect(() => {
+    const getCharacters = async () => {
+      const response = await axios.get<Character[]>(
+        "https://api.sampleapis.com/futurama/characters"
+      );
+
+      setCharacters(response.data);
+    };
+    getCharacters();
+  }, []);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <Link to="/favorites">Favorites</Link>
+
+      {characters?.map((character: Character) => (
+        <ul key={character.id}>
+          <li onClick={() => addFavorite(character)}>
+            <Character character={character} />
+          </li>
+        </ul>
+      ))}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
