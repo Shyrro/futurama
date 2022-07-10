@@ -1,14 +1,15 @@
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import "uno.css";
 import "./App.css";
 import Character from "./Components/Character";
-import { FavoritesContext } from "./RouterApp";
+import { addFavorite } from "./stores/favorites";
 
 function App() {
-  const { addFavorite } = useContext(FavoritesContext);
   const [characters, setCharacters] = useState<Character[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getCharacters = async () => {
@@ -27,7 +28,7 @@ function App() {
 
       {characters?.map((character: Character) => (
         <ul key={character.id}>
-          <li onClick={() => addFavorite(character)}>
+          <li onClick={() => dispatch(addFavorite(character))}>
             <Character character={character} />
           </li>
         </ul>

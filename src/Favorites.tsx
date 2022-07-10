@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Character from "./Components/Character";
-import { FavoritesContext } from "./RouterApp";
+import type { RootState } from "./store";
 
 const Favorites: React.FC = () => {
-  const { favorites } = useContext(FavoritesContext);
+  const favorites = useSelector((state: RootState) => state.favorites);
 
   return (
     <div>
